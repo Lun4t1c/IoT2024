@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using gui.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace gui.ViewModels
         #region Constructor
         public ShellViewModel()
         {
-
+            Globals.IoTAgent.ConnectWithServer("opc.tcp://localhost:4840/");
         }
         #endregion
 
@@ -39,9 +40,12 @@ namespace gui.ViewModels
         }
         #endregion
 
+
+        #region Button clicks
         public void DevicesListButton()
         {
             ActivateDevicesList();
         }
+        #endregion
     }
 }

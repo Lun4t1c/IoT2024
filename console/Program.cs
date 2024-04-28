@@ -18,4 +18,4 @@ agent.ConnectWithServer("opc.tcp://localhost:4840/");
 //agent.AddDevice();
 //Console.WriteLine(agent.Devices[0].NodeId);
 //agent.PerformEmergencyStop(agent.Devices[0]);
-agent.ResetErrorStatus(agent.Devices[0]);
+//agent.ResetErrorStatus(agent.Devices[0]);

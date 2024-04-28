@@ -38,9 +38,6 @@ namespace IoTAgentLib
 
             foreach (var childNode in node.Children())
             {
-                Console.WriteLine(childNode.DisplayName.Value);
-                Console.WriteLine(childNode.NodeId);
-                Console.WriteLine();
                 if (childNode.DisplayName.Value.Contains("Device"))
                 {
                     Devices.Add(new VirtualDevice(childNode.NodeId));
