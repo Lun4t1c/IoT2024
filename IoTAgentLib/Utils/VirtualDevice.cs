@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Opc.Ua;
+using Opc.UaFx;
+using Opc.UaFx.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace IoTAgentLib.Utils
 {
-    public class DeviceModel
+    public class VirtualDevice
     {
         #region Properties
+        public OpcNodeId NodeId { get; set; }
         public bool ProductionStatus { get; set; }
         public Guid WorkorderId { get; set; }
         public short ProductionRate { get; set; }
@@ -18,19 +22,9 @@ namespace IoTAgentLib.Utils
         public byte DeviceErrors { get; set; } = 0000;
         #endregion
 
-        public DeviceModel()
+        public VirtualDevice(OpcNodeId nodeId)
         {
-            
-        }
-
-        public void PerformEmergencyStop()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ResetErrorStatus()
-        {
-            throw new NotImplementedException();
+            NodeId = nodeId;
         }
     }
 }
