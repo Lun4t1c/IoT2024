@@ -16,11 +16,19 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Border BorderThickness="0 0 1 0" BorderBrush="Wheat">
-            <StackPanel Grid.Column="0" Grid.Row="0"
-                    Background="#2B2B2B">
-                <Button Content="beng"/>
+        <Border Grid.Column="0"
+                BorderThickness="0 0 1 0"
+                BorderBrush="Wheat">
+            <StackPanel Background="#2B2B2B">
+                <Button x:Name="DevicesListButton"
+                        Content="Devices"/>
             </StackPanel>
+        </Border>
+
+        <Border Grid.Column="1"
+                BorderThickness="1"
+                BorderBrush="Wheat">
+            <ContentControl x:Name="ActiveItem"/>
         </Border>
     </Grid>
 </Window>
