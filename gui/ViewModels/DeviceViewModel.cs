@@ -1,4 +1,5 @@
-﻿using IoTAgentLib.Utils;
+﻿using Caliburn.Micro;
+using IoTAgentLib.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,17 +8,24 @@ using System.Threading.Tasks;
 
 namespace gui.ViewModels
 {
-    public class DeviceViewModel
+    public class DeviceViewModel : Screen
     {
         #region Properties
-        private VirtualDevice _virtualDevice { get; set; }
+        private VirtualDevice _virtualDevice;
+
+        public VirtualDevice VirtualDevice
+        {
+            get { return _virtualDevice; }
+            set { _virtualDevice = value; NotifyOfPropertyChange(() => VirtualDevice); }
+        }
+
         #endregion
 
 
         #region Constructor
         public DeviceViewModel(VirtualDevice virtualDevice)
         {
-            _virtualDevice = virtualDevice;
+            VirtualDevice = virtualDevice;
         }
         #endregion
 

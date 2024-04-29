@@ -28,7 +28,9 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
 
-                        <ContentControl cal:View.Model="{Binding}"/>
+                        <ContentControl Margin="5"
+                                        Padding="2"
+                                        cal:View.Model="{Binding}"/>
 
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

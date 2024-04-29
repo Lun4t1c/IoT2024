@@ -13,7 +13,7 @@ namespace gui.ViewModels
         #region Properties
         private DevicesListViewModel _devicesList = null;
         private string _serverStatusString = "Server: Disconnected";
-        private string _serverConnectionString = "";
+        private string _serverConnectionString = "opc.tcp://localhost:4840/";
 
         public DevicesListViewModel DevicesList
         {
