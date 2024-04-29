@@ -13,7 +13,7 @@ namespace gui.ViewModels
     {
         #region Properties
         private BindableCollection<DeviceViewModel> _devicesViewModels = new BindableCollection<DeviceViewModel>();
-        private Visibility _emptyTextBlockVisibility = Visibility.Visible;
+        private Visibility _emptyTextBlockVisibility = Visibility.Hidden;
 
         public Visibility EmptyTextBlockVisibility
         {
@@ -38,6 +38,7 @@ namespace gui.ViewModels
                 LoadUpDevicesFromAgent();
             else
             {
+                EmptyTextBlockVisibility = Visibility.Visible;
                 Globals.IoTAgent.DevicesLoadedEvent += OnAgentDevicesLoaded;
             }
         }

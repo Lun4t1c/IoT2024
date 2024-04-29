@@ -48,9 +48,10 @@ namespace gui.ViewModels
 
 
         #region Methods
-        private void ConnectWithServer()
+        private async void ConnectWithServer()
         {
-            Globals.IoTAgent.ConnectWithServer(ServerConnectionString);
+            ServerStatusString = "Server: Connecting...";
+            await Task.Run(() => Globals.IoTAgent.ConnectWithServer(ServerConnectionString));
         }
 
         private async void ActivateDevicesList()
