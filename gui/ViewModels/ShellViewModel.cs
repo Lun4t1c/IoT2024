@@ -51,7 +51,11 @@ namespace gui.ViewModels
         private async void ConnectWithServer()
         {
             ServerStatusString = "Server: Connecting...";
-            await Task.Run(() => Globals.IoTAgent.ConnectWithServer(ServerConnectionString));
+            string? res = await Globals.IoTAgent.ConnectWithServer(ServerConnectionString);
+            if (res != null)
+                ServerStatusString = "Server: " + res;
+            else
+                ServerStatusString = "Server: Error";
         }
 
         private async void ActivateDevicesList()

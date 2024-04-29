@@ -22,7 +22,7 @@ namespace IoTAgentLib
         {
         }
 
-        public async void ConnectWithServer(string address)
+        public async Task<string?> ConnectWithServer(string address)
         {
             try
             {
@@ -32,11 +32,12 @@ namespace IoTAgentLib
                 ServerConnectedEvent?.Invoke(this, EventArgs.Empty);
 
                 LoadUpDeviceNodes();
-
+                return null;
             } 
             catch (Exception exc)
             {
                 await Console.Out.WriteLineAsync(exc.Message);
+                return exc.Message;
             }
         }
 

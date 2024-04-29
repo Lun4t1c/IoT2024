@@ -11,7 +11,8 @@ foreach (string name in await Helpers.GetContainerNamesAsync())
     Console.WriteLine(name);
 }
 
-agent.ConnectWithServer("opc.tcp://localhost:4840/");
+//agent.ConnectWithServer("opc.tcp://localhost:4840/");
+agent.ConnectWithServer("sdsadsad");
 
 //await Helpers.UploadBlobAsync("avg-temperature", "blobo", @"C:\Users\artur\source\repos\IoT2024\console\bin\Debug\net6.0\bvnbvnbv.txt");
 
