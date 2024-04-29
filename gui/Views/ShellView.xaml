@@ -15,8 +15,25 @@
             <ColumnDefinition Width="100"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0" Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Orientation="Horizontal">
+            
+            <TextBox x:Name="ServerConnectionString"
+                     Width="600"/>
+            <Button x:Name="ConnectButton"
+                    Content="Connect"/>
+            
+        </StackPanel>
 
         <Border Grid.Column="0"
+                Grid.Row="1"
                 BorderThickness="0 0 1 0"
                 BorderBrush="Wheat">
             <StackPanel Background="#2B2B2B">
@@ -26,9 +43,14 @@
         </Border>
 
         <Border Grid.Column="1"
+                Grid.Row="1"
                 BorderThickness="1"
                 BorderBrush="Wheat">
             <ContentControl x:Name="ActiveItem"/>
         </Border>
+
+        <TextBlock Grid.Column="0" Grid.ColumnSpan="2"
+                   Grid.Row="2"
+                   Text="{Binding ServerStatusString}"/>
     </Grid>
 </Window>

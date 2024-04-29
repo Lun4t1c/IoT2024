@@ -9,7 +9,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ScrollViewer Grid.Row="1"
+        <TextBlock Text="Empty"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="40"
+                   Visibility="{Binding EmptyTextBlockVisibility}"/>
+        
+        <ScrollViewer Grid.Row="0"
                        VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding DevicesViewModels, IsAsync=True}">
 

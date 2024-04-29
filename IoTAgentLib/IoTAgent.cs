@@ -13,6 +13,11 @@ namespace IoTAgentLib
         public OpcClient _opcClient { get; set; } = null;
         public List<VirtualDevice> Devices { get; set; } = new List<VirtualDevice>();
 
+        public bool IsConnected { get { return _opcClient != null; } }
+
+        public event EventHandler ServerConnectedEvent;
+        public event EventHandler DevicesLoadedEvent;
+
         public IoTAgent()
         {
         }
@@ -24,7 +29,10 @@ namespace IoTAgentLib
                 _opcClient = new OpcClient(address);
                 _opcClient.Connect();
 
+                ServerConnectedEvent?.Invoke(this, EventArgs.Empty);
+
                 LoadUpDeviceNodes();
+
             } 
             catch (Exception exc)
             {
@@ -43,6 +51,8 @@ namespace IoTAgentLib
                     Devices.Add(new VirtualDevice(childNode.NodeId));
                 }
             }
+
+            DevicesLoadedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         public void AddDevice()
