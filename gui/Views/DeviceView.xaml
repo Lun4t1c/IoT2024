@@ -13,6 +13,7 @@
 
                 <TextBlock Text="{Binding VirtualDevice.NodeId}"/>
                 <TextBlock Text="{Binding VirtualDevice.ProductionStatus}"/>
+                <TextBlock Text="{Binding VirtualDevice.ProductionRate}"/>
 
             </StackPanel>
         </Border>

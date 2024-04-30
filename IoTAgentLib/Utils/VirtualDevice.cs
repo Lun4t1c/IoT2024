@@ -12,27 +12,29 @@ namespace IoTAgentLib.Utils
     public class VirtualDevice
     {
         #region Properties
-        public OpcNodeId NodeId { get; set; }
-        public bool ProductionStatus { get; set; }
-        public Guid WorkorderId { get; set; }
-        public short ProductionRate { get; set; }
-        public uint GoodCount { get; set; }
-        public uint BadCount { get; set; }
-        public short Temperature { get; set; }
+        public OpcNodeId NodeId { get; set; } = "";
+        public bool ProductionStatus { get; set; } = false;
+        public Guid WorkorderId { get; set; } = Guid.Empty;
+        public short ProductionRate { get; set; } = 0;
+        public uint GoodCount { get; set; } = 0;
+        public uint BadCount { get; set; } = 0;
+        public short Temperature { get; set; } = 0;
         public byte DeviceErrors { get; set; } = 0000;
         #endregion
 
 
         #region Subscriptions
         public OpcSubscription ProductionStatusSubscription { get; set; }
+        public OpcSubscription ProductionRateSubscription { get; set; }
         #endregion
 
 
         #region Events
         public event EventHandler ProductionStateChangedEvent;
+        public event EventHandler ProductionRateChangedEvent;
         #endregion
 
-        
+
         #region Constructor
         public VirtualDevice(OpcNodeId nodeId)
         {
@@ -47,6 +49,13 @@ namespace IoTAgentLib.Utils
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             ProductionStatus = Convert.ToBoolean(e.Item.Value.Value);
             ProductionStateChangedEvent?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void HandleProductionRateChanged(object sender, OpcDataChangeReceivedEventArgs e)
+        {
+            OpcMonitoredItem item = (OpcMonitoredItem)sender;
+            ProductionRate = Convert.ToInt16(e.Item.Value.Value);
+            ProductionRateChangedEvent?.Invoke(this, EventArgs.Empty);
         }
         #endregion
     }

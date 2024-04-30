@@ -53,6 +53,7 @@ namespace IoTAgentLib
                     VirtualDevice newDevice = new VirtualDevice(childNode.NodeId);
                     
                     newDevice.ProductionStatusSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/ProductionStatus", newDevice.HandleProductionStatusChanged);
+                    newDevice.ProductionRateSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/ProductionRate", newDevice.HandleProductionRateChanged);
 
                     Devices.Add(newDevice);
                 }

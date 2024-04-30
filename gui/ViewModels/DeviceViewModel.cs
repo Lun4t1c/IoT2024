@@ -28,6 +28,7 @@ namespace gui.ViewModels
             VirtualDevice = virtualDevice;
 
             VirtualDevice.ProductionStateChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
+            VirtualDevice.ProductionRateChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
         }
         #endregion
 
