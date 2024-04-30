@@ -24,21 +24,22 @@ namespace IoTAgentLib
 
         public async Task<string?> ConnectWithServer(string address)
         {
-            try
+            return await Task.Run(async () =>
             {
-                _opcClient = new OpcClient(address);
-                _opcClient.Connect();
-
-                ServerConnectedEvent?.Invoke(this, EventArgs.Empty);
-
-                LoadUpDeviceNodes();
-                return null;
-            } 
-            catch (Exception exc)
-            {
-                await Console.Out.WriteLineAsync(exc.Message);
-                return exc.Message;
-            }
+                try
+                {
+                    _opcClient = new OpcClient(address);
+                    _opcClient.Connect(); // Run Connect asynchronously
+                    ServerConnectedEvent?.Invoke(this, EventArgs.Empty);
+                    LoadUpDeviceNodes();
+                    return null;
+                }
+                catch (Exception exc)
+                {
+                    await Console.Out.WriteLineAsync(exc.Message);
+                    return exc.Message;
+                }
+            });
         }
 
         public void LoadUpDeviceNodes()
