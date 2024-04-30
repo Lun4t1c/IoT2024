@@ -50,7 +50,11 @@ namespace IoTAgentLib
             {
                 if (childNode.DisplayName.Value.Contains("Device"))
                 {
-                    Devices.Add(new VirtualDevice(childNode.NodeId));
+                    VirtualDevice newDevice = new VirtualDevice(childNode.NodeId);
+                    
+                    newDevice.ProductionStatusSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/ProductionStatus", newDevice.HandleProductionStatusChanged);
+
+                    Devices.Add(newDevice);
                 }
             }
 

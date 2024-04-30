@@ -26,5 +26,24 @@ namespace IoTAgentLib.Utils
         {
             NodeId = nodeId;
         }
+
+        #region Subscriptions
+        public OpcSubscription ProductionStatusSubscription { get; set; }
+        #endregion
+
+
+        #region Event handlers
+        public void HandleProductionStatusChanged(object sender, OpcDataChangeReceivedEventArgs e)
+        {
+            OpcMonitoredItem item = (OpcMonitoredItem)sender;
+
+            Console.WriteLine(
+                    "Data Change from NodeId '{0}': {1}",
+                    item.NodeId,
+                    e.Item.Value);
+
+
+        }
+        #endregion
     }
 }
