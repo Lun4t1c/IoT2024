@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace gui.ViewModels
 {
@@ -18,7 +19,6 @@ namespace gui.ViewModels
             get { return _virtualDevice; }
             set { _virtualDevice = value; NotifyOfPropertyChange(() => VirtualDevice); }
         }
-
         #endregion
 
 
@@ -26,6 +26,8 @@ namespace gui.ViewModels
         public DeviceViewModel(VirtualDevice virtualDevice)
         {
             VirtualDevice = virtualDevice;
+
+            VirtualDevice.ProductionStateChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
         }
         #endregion
 

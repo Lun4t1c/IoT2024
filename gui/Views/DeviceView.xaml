@@ -12,6 +12,7 @@
             <StackPanel Orientation="Vertical">
 
                 <TextBlock Text="{Binding VirtualDevice.NodeId}"/>
+                <TextBlock Text="{Binding VirtualDevice.ProductionStatus}"/>
 
             </StackPanel>
         </Border>

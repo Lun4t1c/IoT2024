@@ -22,13 +22,22 @@ namespace IoTAgentLib.Utils
         public byte DeviceErrors { get; set; } = 0000;
         #endregion
 
+
+        #region Subscriptions
+        public OpcSubscription ProductionStatusSubscription { get; set; }
+        #endregion
+
+
+        #region Events
+        public event EventHandler ProductionStateChangedEvent;
+        #endregion
+
+        
+        #region Constructor
         public VirtualDevice(OpcNodeId nodeId)
         {
             NodeId = nodeId;
         }
-
-        #region Subscriptions
-        public OpcSubscription ProductionStatusSubscription { get; set; }
         #endregion
 
 
@@ -36,13 +45,8 @@ namespace IoTAgentLib.Utils
         public void HandleProductionStatusChanged(object sender, OpcDataChangeReceivedEventArgs e)
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
-
-            Console.WriteLine(
-                    "Data Change from NodeId '{0}': {1}",
-                    item.NodeId,
-                    e.Item.Value);
-
-
+            ProductionStatus = Convert.ToBoolean(e.Item.Value.Value);
+            ProductionStateChangedEvent?.Invoke(this, EventArgs.Empty);
         }
         #endregion
     }
