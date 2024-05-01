@@ -25,13 +25,23 @@ namespace IoTAgentLib.Utils
 
         #region Subscriptions
         public OpcSubscription ProductionStatusSubscription { get; set; }
+        public OpcSubscription WorkorderIdSubscription { get; set; }
         public OpcSubscription ProductionRateSubscription { get; set; }
+        public OpcSubscription GoodCountSubscription { get; set; }
+        public OpcSubscription BadCountSubscription { get; set; }
+        public OpcSubscription TemperatureSubscription { get; set; }
+        public OpcSubscription DeviceErrorsSubscription { get; set; }
         #endregion
 
 
         #region Events
         public event EventHandler ProductionStateChangedEvent;
+        public event EventHandler WorkorderIdChangedEvent;
         public event EventHandler ProductionRateChangedEvent;
+        public event EventHandler GoodCountChangedEvent;
+        public event EventHandler BadCountChangedEvent;
+        public event EventHandler TemperatureChangedEvent;
+        public event EventHandler DeviceErrorsChangedEvent;
         #endregion
 
 
@@ -51,11 +61,46 @@ namespace IoTAgentLib.Utils
             ProductionStateChangedEvent?.Invoke(this, EventArgs.Empty);
         }
 
+        public void HandleWorkorderIdChanged(object sender, OpcDataChangeReceivedEventArgs e)
+        {
+            OpcMonitoredItem item = (OpcMonitoredItem)sender;
+            WorkorderId = Guid.Parse(e.Item.Value.Value.ToString());
+            WorkorderIdChangedEvent?.Invoke(this, EventArgs.Empty);
+        }
+
         public void HandleProductionRateChanged(object sender, OpcDataChangeReceivedEventArgs e)
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             ProductionRate = Convert.ToInt16(e.Item.Value.Value);
             ProductionRateChangedEvent?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void HandleGoodCountChanged(object sender, OpcDataChangeReceivedEventArgs e)
+        {
+            OpcMonitoredItem item = (OpcMonitoredItem)sender;
+            GoodCount = Convert.ToUInt32(e.Item.Value.Value);
+            GoodCountChangedEvent?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void HandleBadCountChanged(object sender, OpcDataChangeReceivedEventArgs e)
+        {
+            OpcMonitoredItem item = (OpcMonitoredItem)sender;
+            BadCount = Convert.ToUInt32(e.Item.Value.Value);
+            BadCountChangedEvent?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void HandleTemperatureChanged(object sender, OpcDataChangeReceivedEventArgs e)
+        {
+            OpcMonitoredItem item = (OpcMonitoredItem)sender;
+            Temperature = Convert.ToInt16(e.Item.Value.Value);
+            TemperatureChangedEvent?.Invoke(this, EventArgs.Empty);
+        }
+
+        public void HandleDeviceErrorsChanged(object sender, OpcDataChangeReceivedEventArgs e)
+        {
+            OpcMonitoredItem item = (OpcMonitoredItem)sender;
+            DeviceErrors = Convert.ToByte(e.Item.Value.Value);
+            DeviceErrorsChangedEvent?.Invoke(this, EventArgs.Empty);
         }
         #endregion
     }
