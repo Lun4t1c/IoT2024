@@ -51,8 +51,12 @@
                     <TextBlock Text="{Binding VirtualDevice.DeviceErrors}"/>
                 </StackPanel>
 
-                <Button x:Name="SetProductionRateButton"
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="ProductionRateTextBox"
+                             Width="30"/>
+                    <Button x:Name="SetProductionRateButton"
                         Content="Set production rate"/>
+                </StackPanel>
             </StackPanel>
         </Border>
     </Grid>

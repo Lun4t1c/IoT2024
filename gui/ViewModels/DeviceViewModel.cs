@@ -13,11 +13,18 @@ namespace gui.ViewModels
     {
         #region Properties
         private VirtualDevice _virtualDevice;
-
+        private short _productionRateTextBox;
+        
         public VirtualDevice VirtualDevice
         {
             get { return _virtualDevice; }
             set { _virtualDevice = value; NotifyOfPropertyChange(() => VirtualDevice); }
+        }
+
+        public short ProductionRateTextBox
+        {
+            get { return _productionRateTextBox; }
+            set { _productionRateTextBox = value; NotifyOfPropertyChange(() => ProductionRateTextBox); }
         }
         #endregion
 
@@ -41,7 +48,7 @@ namespace gui.ViewModels
         #region Methods
         private async void SetProductionRate()
         {
-            Utils.Globals.IoTAgent.SetProductionRateInDevice(VirtualDevice, 50);
+            Utils.Globals.IoTAgent.SetProductionRateInDevice(VirtualDevice, ProductionRateTextBox);
         }
         #endregion
 
