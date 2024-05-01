@@ -39,12 +39,18 @@ namespace gui.ViewModels
 
 
         #region Methods
-
+        private async void SetProductionRate()
+        {
+            Utils.Globals.IoTAgent.SetProductionRateInDevice(VirtualDevice, 50);
+        }
         #endregion
 
 
         #region Button clicks
-
+        public void SetProductionRateButton()
+        {
+            SetProductionRate();
+        }
         #endregion
     }
 }

@@ -50,7 +50,9 @@
                     <TextBlock Text="Device errors: "/>
                     <TextBlock Text="{Binding VirtualDevice.DeviceErrors}"/>
                 </StackPanel>
-                
+
+                <Button x:Name="SetProductionRateButton"
+                        Content="Set production rate"/>
             </StackPanel>
         </Border>
     </Grid>
