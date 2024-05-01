@@ -11,10 +11,46 @@
                 BorderBrush="Wheat">
             <StackPanel Orientation="Vertical">
 
-                <TextBlock Text="{Binding VirtualDevice.NodeId}"/>
-                <TextBlock Text="{Binding VirtualDevice.ProductionStatus}"/>
-                <TextBlock Text="{Binding VirtualDevice.ProductionRate}"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="NodeId: "/>
+                    <TextBlock Text="{Binding VirtualDevice.NodeId}"/>
+                </StackPanel>
 
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Production status: "/>
+                    <TextBlock Text="{Binding VirtualDevice.ProductionStatus}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Workorder ID: "/>
+                    <TextBlock Text="{Binding VirtualDevice.WorkorderId}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Production rate: "/>
+                    <TextBlock Text="{Binding VirtualDevice.ProductionRate}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Good count: "/>
+                    <TextBlock Text="{Binding VirtualDevice.GoodCount}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Bad count: "/>
+                    <TextBlock Text="{Binding VirtualDevice.BadCount}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Temperature: "/>
+                    <TextBlock Text="{Binding VirtualDevice.Temperature}"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Device errors: "/>
+                    <TextBlock Text="{Binding VirtualDevice.DeviceErrors}"/>
+                </StackPanel>
+                
             </StackPanel>
         </Border>
     </Grid>

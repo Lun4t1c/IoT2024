@@ -28,7 +28,12 @@ namespace gui.ViewModels
             VirtualDevice = virtualDevice;
 
             VirtualDevice.ProductionStateChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
+            VirtualDevice.WorkorderIdChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
             VirtualDevice.ProductionRateChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
+            VirtualDevice.GoodCountChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
+            VirtualDevice.BadCountChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
+            VirtualDevice.TemperatureChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
+            VirtualDevice.DeviceErrorsChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
         }
         #endregion
 
