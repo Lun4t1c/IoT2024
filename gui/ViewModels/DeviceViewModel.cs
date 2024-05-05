@@ -13,7 +13,7 @@ namespace gui.ViewModels
     {
         #region Properties
         private VirtualDevice _virtualDevice;
-        private short _productionRateTextBox;
+        private short _productionRateBuffer;
         
         public VirtualDevice VirtualDevice
         {
@@ -21,10 +21,10 @@ namespace gui.ViewModels
             set { _virtualDevice = value; NotifyOfPropertyChange(() => VirtualDevice); }
         }
 
-        public short ProductionRateTextBox
+        public short ProductionRateBuffer
         {
-            get { return _productionRateTextBox; }
-            set { _productionRateTextBox = value; NotifyOfPropertyChange(() => ProductionRateTextBox); }
+            get { return _productionRateBuffer; }
+            set { _productionRateBuffer = value; NotifyOfPropertyChange(() => ProductionRateBuffer); }
         }
         #endregion
 
@@ -36,7 +36,7 @@ namespace gui.ViewModels
 
             VirtualDevice.ProductionStateChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
             VirtualDevice.WorkorderIdChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
-            VirtualDevice.ProductionRateChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
+            VirtualDevice.ProductionRateChangedEvent += (_, _) => { NotifyOfPropertyChange(() => VirtualDevice); ProductionRateBuffer = VirtualDevice.ProductionRate; };
             VirtualDevice.GoodCountChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
             VirtualDevice.BadCountChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
             VirtualDevice.TemperatureChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
@@ -48,7 +48,7 @@ namespace gui.ViewModels
         #region Methods
         private async void SetProductionRate()
         {
-            Utils.Globals.IoTAgent.SetProductionRateInDevice(VirtualDevice, ProductionRateTextBox);
+            Utils.Globals.IoTAgent.SetProductionRateInDevice(VirtualDevice, ProductionRateBuffer);
         }
         #endregion
 

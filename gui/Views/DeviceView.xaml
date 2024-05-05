@@ -52,7 +52,7 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
-                    <TextBox x:Name="ProductionRateTextBox"
+                    <TextBox x:Name="ProductionRateBuffer"
                              Width="30"/>
                     <Button x:Name="SetProductionRateButton"
                         Content="Set production rate"/>
