@@ -5,6 +5,8 @@ using IoTAgentLib.Utils;
 using Opc.Ua;
 using Opc.UaFx;
 using Opc.UaFx.Client;
+using Microsoft.Azure.Devices;
+using Microsoft.Azure.Devices.Client;
 
 namespace IoTAgentLib
 {
@@ -51,6 +53,7 @@ namespace IoTAgentLib
                 if (childNode.DisplayName.Value.Contains("Device"))
                 {
                     VirtualDevice newDevice = new VirtualDevice(childNode.NodeId);
+                    newDevice.DisplayName = childNode.DisplayName;
                     
                     newDevice.ProductionStatusSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/ProductionStatus", newDevice.HandleProductionStatusChanged);
                     newDevice.WorkorderIdSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/WorkorderId", newDevice.HandleWorkorderIdChanged);
@@ -65,6 +68,27 @@ namespace IoTAgentLib
             }
 
             DevicesLoadedEvent?.Invoke(this, EventArgs.Empty);
+            AssociateIoTHubDevices();
+        }
+
+        public async void AssociateIoTHubDevices()
+        {
+            var registryManager = RegistryManager.CreateFromConnectionString(Utils.Config.IOT_HUB_CONNECTION_STRING);
+            var devices = await registryManager.GetDevicesAsync(int.MaxValue);
+
+            foreach (var azureDevice in devices)
+            {
+                var deviceDetails = await registryManager.GetDeviceAsync(azureDevice.Id);
+                string deviceConnectionString = $"HostName=maciek.azure-devices.net;DeviceId={azureDevice.Id};SharedAccessKey={deviceDetails.Authentication.SymmetricKey.PrimaryKey}";
+
+                foreach (VirtualDevice virtualDevice in Devices)
+                {
+                    if (azureDevice.Id == virtualDevice.DisplayName.Replace(" ", ""))
+                        virtualDevice.DeviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString);
+                }
+            }
+
+            await registryManager.CloseAsync();
         }
 
         public OpcStatus SetProductionRateInDevice(VirtualDevice device, short newRate)

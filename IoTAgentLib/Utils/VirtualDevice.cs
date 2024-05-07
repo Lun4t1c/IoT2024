@@ -1,4 +1,5 @@
-﻿using Opc.Ua;
+﻿using Microsoft.Azure.Devices.Client;
+using Opc.Ua;
 using Opc.UaFx;
 using Opc.UaFx.Client;
 using System;
@@ -12,6 +13,9 @@ namespace IoTAgentLib.Utils
     public class VirtualDevice
     {
         #region Properties
+        public DeviceClient DeviceClient { get; set; } = null;
+        public string DisplayName { get; set; } = "";
+
         public OpcNodeId NodeId { get; set; } = "";
         public bool ProductionStatus { get; set; } = false;
         public Guid WorkorderId { get; set; } = Guid.Empty;
