@@ -12,6 +12,7 @@ namespace IoTAgentLib
 {
     public class IoTAgent
     {
+        #region Properties
         public static IoTAgent Instance { get; set; } = null;
 
         public OpcClient _opcClient { get; set; } = null;
@@ -21,15 +22,21 @@ namespace IoTAgentLib
 
         public event EventHandler ServerConnectedEvent;
         public event EventHandler DevicesLoadedEvent;
+        #endregion
 
+
+        #region Constructor + Instance getter
         private IoTAgent() { }
         public static IoTAgent GetInstance()
         {
             if (Instance == null)
                 Instance = new IoTAgent();
             return Instance;
-        } 
+        }
+        #endregion
 
+
+        #region Methods
         public async Task<string?> ConnectWithServer(string address)
         {
             return await Task.Run(async () =>
@@ -60,7 +67,7 @@ namespace IoTAgentLib
                 {
                     VirtualDevice newDevice = new VirtualDevice(childNode.NodeId);
                     newDevice.DisplayName = childNode.DisplayName;
-                    
+
                     newDevice.ProductionStatusSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/ProductionStatus", newDevice.HandleProductionStatusChanged);
                     newDevice.WorkorderIdSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/WorkorderId", newDevice.HandleWorkorderIdChanged);
                     newDevice.ProductionRateSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/ProductionRate", newDevice.HandleProductionRateChanged);
@@ -121,5 +128,6 @@ namespace IoTAgentLib
                 device.NodeId.ToString() + "/ResetErrorStatus"
                 );
         }
+        #endregion
     }
 }
