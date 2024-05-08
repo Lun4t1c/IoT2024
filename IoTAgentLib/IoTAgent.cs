@@ -12,6 +12,8 @@ namespace IoTAgentLib
 {
     public class IoTAgent
     {
+        public static IoTAgent Instance { get; set; } = null;
+
         public OpcClient _opcClient { get; set; } = null;
         public List<VirtualDevice> Devices { get; set; } = new List<VirtualDevice>();
 
@@ -20,9 +22,13 @@ namespace IoTAgentLib
         public event EventHandler ServerConnectedEvent;
         public event EventHandler DevicesLoadedEvent;
 
-        public IoTAgent()
+        private IoTAgent() { }
+        public static IoTAgent GetInstance()
         {
-        }
+            if (Instance == null)
+                Instance = new IoTAgent();
+            return Instance;
+        } 
 
         public async Task<string?> ConnectWithServer(string address)
         {
@@ -84,7 +90,11 @@ namespace IoTAgentLib
                 foreach (VirtualDevice virtualDevice in Devices)
                 {
                     if (azureDevice.Id == virtualDevice.DisplayName.Replace(" ", ""))
+                    {
                         virtualDevice.DeviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString);
+                        _ = virtualDevice.DeviceClient.SetMethodHandlerAsync("EmergencyStop", virtualDevice.EmergencyStopMethodHandler, virtualDevice.DeviceClient);
+                        _ = virtualDevice.DeviceClient.SetMethodHandlerAsync("ResetErrorStatus", virtualDevice.ResetErrorStatusMethodHandler, virtualDevice.DeviceClient);
+                    }
                 }
             }
 

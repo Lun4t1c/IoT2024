@@ -9,6 +9,6 @@ namespace gui.Utils
 {
     public static class Globals
     {
-        public static IoTAgent IoTAgent { get; set; } = new IoTAgent();
+        public static IoTAgent IoTAgent { get; set; } = IoTAgent.GetInstance();
     }
 }

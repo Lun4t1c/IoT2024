@@ -4,7 +4,7 @@ using IoTAgentLib.Utils;
 
 Console.WriteLine("Hello, IoT!");
 
-IoTAgent agent = new IoTAgent();
+IoTAgent agent = IoTAgent.GetInstance();
 
 foreach (string name in await Helpers.GetContainerNamesAsync())
 {

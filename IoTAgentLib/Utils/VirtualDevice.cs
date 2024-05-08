@@ -142,6 +142,18 @@ namespace IoTAgentLib.Utils
 
             DeviceErrorsChangedEvent?.Invoke(this, EventArgs.Empty);
         }
+
+        public async Task<MethodResponse> EmergencyStopMethodHandler(MethodRequest methodRequest, object userContext)
+        {
+            IoTAgent.GetInstance().PerformEmergencyStop(this);
+            return new MethodResponse(0);
+        }
+
+        public async Task<MethodResponse> ResetErrorStatusMethodHandler(MethodRequest methodRequest, object userContext)
+        {
+            IoTAgent.GetInstance().ResetErrorStatus(this);
+            return new MethodResponse(0);
+        }
         #endregion
     }
 }
