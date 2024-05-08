@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.Devices.Client;
+using Microsoft.Azure.Devices.Shared;
 using Opc.Ua;
 using Opc.UaFx;
 using Opc.UaFx.Client;
@@ -23,7 +24,7 @@ namespace IoTAgentLib.Utils
         public uint GoodCount { get; set; } = 0;
         public uint BadCount { get; set; } = 0;
         public short Temperature { get; set; } = 0;
-        public byte DeviceErrors { get; set; } = 0000;
+        public byte DeviceError { get; set; } = 0000;
         #endregion
 
 
@@ -57,11 +58,38 @@ namespace IoTAgentLib.Utils
         #endregion
 
 
+        #region Methods
+        public async Task<string?> UpdateTwinPropertyAsync(string propertyName, object value)
+        {
+            if (DeviceClient == null) return null;
+
+            try
+            {
+                var twin = DeviceClient.GetTwinAsync();
+
+                TwinCollection reportedProperties = new TwinCollection();
+                reportedProperties[propertyName] = value;
+
+                await DeviceClient.UpdateReportedPropertiesAsync(reportedProperties);
+
+                await Console.Out.WriteLineAsync($"Updated '{propertyName}' for '{DisplayName}' ({value})");
+                return null;
+            }
+            catch (Exception exc)
+            {
+                await Console.Out.WriteLineAsync(exc.Message);
+                return exc.Message;
+            }
+        }
+        #endregion
+
+
         #region Event handlers
         public void HandleProductionStatusChanged(object sender, OpcDataChangeReceivedEventArgs e)
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             ProductionStatus = Convert.ToBoolean(e.Item.Value.Value);
+
             ProductionStateChangedEvent?.Invoke(this, EventArgs.Empty);
         }
 
@@ -69,6 +97,7 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             WorkorderId = Guid.Parse(e.Item.Value.Value.ToString());
+
             WorkorderIdChangedEvent?.Invoke(this, EventArgs.Empty);
         }
 
@@ -76,6 +105,8 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             ProductionRate = Convert.ToInt16(e.Item.Value.Value);
+            _ = UpdateTwinPropertyAsync(nameof(ProductionRate), ProductionRate);
+
             ProductionRateChangedEvent?.Invoke(this, EventArgs.Empty);
         }
 
@@ -83,6 +114,7 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             GoodCount = Convert.ToUInt32(e.Item.Value.Value);
+
             GoodCountChangedEvent?.Invoke(this, EventArgs.Empty);
         }
 
@@ -90,6 +122,7 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             BadCount = Convert.ToUInt32(e.Item.Value.Value);
+
             BadCountChangedEvent?.Invoke(this, EventArgs.Empty);
         }
 
@@ -97,13 +130,16 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             Temperature = Convert.ToInt16(e.Item.Value.Value);
+
             TemperatureChangedEvent?.Invoke(this, EventArgs.Empty);
         }
 
         public void HandleDeviceErrorsChanged(object sender, OpcDataChangeReceivedEventArgs e)
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
-            DeviceErrors = Convert.ToByte(e.Item.Value.Value);
+            DeviceError = Convert.ToByte(e.Item.Value.Value);
+            _ = UpdateTwinPropertyAsync(nameof(DeviceError), DeviceError);
+
             DeviceErrorsChangedEvent?.Invoke(this, EventArgs.Empty);
         }
         #endregion
