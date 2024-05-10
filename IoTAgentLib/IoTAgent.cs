@@ -44,7 +44,7 @@ namespace IoTAgentLib
                 try
                 {
                     _opcClient = new OpcClient(address);
-                    _opcClient.Connect(); // Run Connect asynchronously
+                    _opcClient.Connect();
                     ServerConnectedEvent?.Invoke(this, EventArgs.Empty);
                     LoadUpDeviceNodes();
                     return null;

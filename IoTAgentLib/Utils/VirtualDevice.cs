@@ -6,6 +6,7 @@ using Opc.UaFx.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -59,6 +60,17 @@ namespace IoTAgentLib.Utils
 
 
         #region Methods
+        public async Task DeviceToCloudMessage(string propertyName, object propertyValue)
+        {
+            Message eventMessage = new Message();
+            eventMessage.ContentType = MediaTypeNames.Application.Json;
+            eventMessage.ContentEncoding = "utf-8";
+            eventMessage.Properties.Add(propertyName, propertyValue.ToString());
+
+            if (DeviceClient != null)
+                await DeviceClient.SendEventAsync(eventMessage);
+        }
+
         public async Task<string?> UpdateTwinPropertyAsync(string propertyName, object value)
         {
             if (DeviceClient == null) return null;
@@ -139,6 +151,7 @@ namespace IoTAgentLib.Utils
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             DeviceError = Convert.ToByte(e.Item.Value.Value);
             _ = UpdateTwinPropertyAsync(nameof(DeviceError), DeviceError);
+            _ = DeviceToCloudMessage(nameof(DeviceError), DeviceError);
 
             DeviceErrorsChangedEvent?.Invoke(this, EventArgs.Empty);
         }
