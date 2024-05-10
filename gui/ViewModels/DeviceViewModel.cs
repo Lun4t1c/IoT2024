@@ -14,7 +14,9 @@ namespace gui.ViewModels
         #region Properties
         private VirtualDevice _virtualDevice;
         private short _productionRateBuffer;
-        
+        private string _azureClientStateString = ".";
+
+
         public VirtualDevice VirtualDevice
         {
             get { return _virtualDevice; }
@@ -25,6 +27,12 @@ namespace gui.ViewModels
         {
             get { return _productionRateBuffer; }
             set { _productionRateBuffer = value; NotifyOfPropertyChange(() => ProductionRateBuffer); }
+        }
+
+        public string AzureClientStateString
+        {
+            get { return _azureClientStateString; }
+            set { _azureClientStateString = value; NotifyOfPropertyChange(() => AzureClientStateString); }
         }
         #endregion
 
@@ -41,6 +49,8 @@ namespace gui.ViewModels
             VirtualDevice.BadCountChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
             VirtualDevice.TemperatureChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
             VirtualDevice.DeviceErrorsChangedEvent += (_, _) => NotifyOfPropertyChange(() => VirtualDevice);
+
+            VirtualDevice.AzureClientStateChangeEvent += (_, _) => AzureClientStateString = VirtualDevice.DeviceClient == null ? "Disconnected" : "Connected";
         }
         #endregion
 

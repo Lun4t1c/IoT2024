@@ -50,6 +50,10 @@
                     <TextBlock Text="Device errors: "/>
                     <TextBlock Text="{Binding VirtualDevice.DeviceErrors}"/>
                 </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Azure IoT hub: "/>
+                    <TextBlock Text="{Binding AzureClientStateString}"/>
+                </StackPanel>
 
                 <StackPanel Orientation="Horizontal">
                     <TextBox x:Name="ProductionRateBuffer"

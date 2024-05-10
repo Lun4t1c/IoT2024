@@ -48,6 +48,8 @@ namespace IoTAgentLib.Utils
         public event EventHandler BadCountChangedEvent;
         public event EventHandler TemperatureChangedEvent;
         public event EventHandler DeviceErrorsChangedEvent;
+
+        public event EventHandler AzureClientStateChangeEvent;
         #endregion
 
 
@@ -92,6 +94,11 @@ namespace IoTAgentLib.Utils
                 await Console.Out.WriteLineAsync(exc.Message);
                 return exc.Message;
             }
+        }
+
+        public void NotifyOfAzureClientStateChange()
+        {
+            AzureClientStateChangeEvent?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 

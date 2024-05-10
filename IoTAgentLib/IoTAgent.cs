@@ -99,6 +99,8 @@ namespace IoTAgentLib
                     if (azureDevice.Id == virtualDevice.DisplayName.Replace(" ", ""))
                     {
                         virtualDevice.DeviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString);
+                        virtualDevice.NotifyOfAzureClientStateChange();
+
                         _ = virtualDevice.DeviceClient.SetMethodHandlerAsync("EmergencyStop", virtualDevice.EmergencyStopMethodHandler, virtualDevice.DeviceClient);
                         _ = virtualDevice.DeviceClient.SetMethodHandlerAsync("ResetErrorStatus", virtualDevice.ResetErrorStatusMethodHandler, virtualDevice.DeviceClient);
                     }
