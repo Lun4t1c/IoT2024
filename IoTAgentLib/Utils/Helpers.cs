@@ -9,6 +9,10 @@ namespace IoTAgentLib.Utils
 {
     public static class Helpers
     {
+        /// <summary>
+        /// Gets blob container names from Azure
+        /// </summary>
+        /// <returns><c>List<string></c> with names of containers</returns>
         public async static Task<List<string>> GetContainerNamesAsync()
         {
             List<string> result = new List<string>();
@@ -24,6 +28,13 @@ namespace IoTAgentLib.Utils
             return result;
         }
 
+        /// <summary>
+        /// Uploads blob to container
+        /// </summary>
+        /// <param name="containerName">Name of container</param>
+        /// <param name="blobName">Name of blob in container</param>
+        /// <param name="filePath">Path to file to be uploaded as blob</param>
+        /// <returns></returns>
         public static async Task UploadBlobAsync(string containerName, string blobName, string filePath)
         {
             BlobServiceClient blobServiceClient = new BlobServiceClient(Utils.Config.BLOB_CONNECTION_STRING);

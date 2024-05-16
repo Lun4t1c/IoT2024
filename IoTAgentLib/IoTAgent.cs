@@ -10,14 +10,30 @@ using Microsoft.Azure.Devices.Client;
 
 namespace IoTAgentLib
 {
+    /// <summary>
+    /// Singleton class for managing Azure Hub and production devices connection
+    /// </summary>
     public class IoTAgent
     {
         #region Properties
-        public static IoTAgent Instance { get; set; } = null;
+        /// <summary>
+        /// IoTAgent's intance
+        /// </summary>
+        private static IoTAgent Instance { get; set; } = null;
 
+        /// <summary>
+        /// OPC server's client
+        /// </summary>
         public OpcClient _opcClient { get; set; } = null;
+
+        /// <summary>
+        /// List of devices in system
+        /// </summary>
         public List<VirtualDevice> Devices { get; set; } = new List<VirtualDevice>();
 
+        /// <summary>
+        /// Flag for keeping information about OPC connection state
+        /// </summary>
         public bool IsConnected { get { return _opcClient != null; } }
 
         public event EventHandler ServerConnectedEvent;
@@ -37,6 +53,11 @@ namespace IoTAgentLib
 
 
         #region Methods
+        /// <summary>
+        /// Connects with OPC server by creating new client
+        /// </summary>
+        /// <param name="address">OPC server's address</param>
+        /// <returns><c>null</c> if succeeded and error message as string if failed</returns>
         public async Task<string?> ConnectWithServer(string address)
         {
             return await Task.Run(async () =>
@@ -57,6 +78,10 @@ namespace IoTAgentLib
             });
         }
 
+        /// <summary>
+        /// Loads up devices found on OPC server.
+        /// Assumes nodes with devices have "Device" in name.
+        /// </summary>
         public void LoadUpDeviceNodes()
         {
             var node = _opcClient.BrowseNode(OpcObjectTypes.ObjectsFolder);
@@ -84,6 +109,11 @@ namespace IoTAgentLib
             AssociateIoTHubDevices();
         }
 
+        /// <summary>
+        /// Checks Azure IoT hub for list of devices
+        /// and creates new Azure device client
+        /// for every found match with production device
+        /// </summary>
         public async void AssociateIoTHubDevices()
         {
             var registryManager = RegistryManager.CreateFromConnectionString(Utils.Config.IOT_HUB_CONNECTION_STRING);
@@ -110,11 +140,21 @@ namespace IoTAgentLib
             await registryManager.CloseAsync();
         }
 
+        /// <summary>
+        /// Sets new production rate for given device
+        /// </summary>
+        /// <param name="device">Device in which production rate has to be changed</param>
+        /// <param name="newRate">New production rate value</param>
+        /// <returns><c>OpcStatus</c></returns>
         public OpcStatus SetProductionRateInDevice(VirtualDevice device, short newRate)
         {
             return _opcClient.WriteNode(device.NodeId + "/ProductionRate", Convert.ToInt32(newRate));
         }
 
+        /// <summary>
+        /// Executes emergency stop method for given device
+        /// </summary>
+        /// <param name="device"></param>
         public void PerformEmergencyStop(VirtualDevice device)
         {
             _opcClient.CallMethod(
@@ -123,6 +163,10 @@ namespace IoTAgentLib
                 );
         }
 
+        /// <summary>
+        /// Resets error codes for given device
+        /// </summary>
+        /// <param name="device"></param>
         public void ResetErrorStatus(VirtualDevice device)
         {
             _opcClient.CallMethod(
