@@ -24,7 +24,7 @@ namespace IoTAgentLib.Utils
         public short ProductionRate { get; set; } = 0;
         public uint GoodCount { get; set; } = 0;
         public uint BadCount { get; set; } = 0;
-        public short Temperature { get; set; } = 0;
+        public double Temperature { get; set; } = 0;
         public byte DeviceError { get; set; } = 0000;
         #endregion
 
@@ -67,6 +67,7 @@ namespace IoTAgentLib.Utils
             Message eventMessage = new Message();
             eventMessage.ContentType = MediaTypeNames.Application.Json;
             eventMessage.ContentEncoding = "utf-8";
+            eventMessage.Properties.Add("DeviceId", DisplayName.Replace(" ", ""));
             eventMessage.Properties.Add(propertyName, propertyValue.ToString());
 
             if (DeviceClient != null)
@@ -108,6 +109,7 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             ProductionStatus = Convert.ToBoolean(e.Item.Value.Value);
+            _ = DeviceToCloudMessage(nameof(ProductionStatus), ProductionStatus);
 
             ProductionStateChangedEvent?.Invoke(this, EventArgs.Empty);
         }
@@ -116,6 +118,7 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             WorkorderId = Guid.Parse(e.Item.Value.Value.ToString());
+            _ = DeviceToCloudMessage(nameof(WorkorderId), WorkorderId);
 
             WorkorderIdChangedEvent?.Invoke(this, EventArgs.Empty);
         }
@@ -125,6 +128,7 @@ namespace IoTAgentLib.Utils
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             ProductionRate = Convert.ToInt16(e.Item.Value.Value);
             _ = UpdateTwinPropertyAsync(nameof(ProductionRate), ProductionRate);
+            _ = DeviceToCloudMessage(nameof(ProductionRate), ProductionRate);
 
             ProductionRateChangedEvent?.Invoke(this, EventArgs.Empty);
         }
@@ -133,6 +137,7 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             GoodCount = Convert.ToUInt32(e.Item.Value.Value);
+            _ = DeviceToCloudMessage(nameof(GoodCount), GoodCount);
 
             GoodCountChangedEvent?.Invoke(this, EventArgs.Empty);
         }
@@ -141,6 +146,7 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             BadCount = Convert.ToUInt32(e.Item.Value.Value);
+            _ = DeviceToCloudMessage(nameof(BadCount), BadCount);
 
             BadCountChangedEvent?.Invoke(this, EventArgs.Empty);
         }
@@ -148,7 +154,8 @@ namespace IoTAgentLib.Utils
         public void HandleTemperatureChanged(object sender, OpcDataChangeReceivedEventArgs e)
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
-            Temperature = Convert.ToInt16(e.Item.Value.Value);
+            Temperature = (double)e.Item.Value.Value;
+            _ = DeviceToCloudMessage(nameof(Temperature), Temperature);
 
             TemperatureChangedEvent?.Invoke(this, EventArgs.Empty);
         }
