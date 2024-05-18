@@ -128,7 +128,6 @@ namespace IoTAgentLib.Utils
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             ProductionRate = Convert.ToInt16(e.Item.Value.Value);
             _ = UpdateTwinPropertyAsync(nameof(ProductionRate), ProductionRate);
-            _ = DeviceToCloudMessage(nameof(ProductionRate), ProductionRate);
 
             ProductionRateChangedEvent?.Invoke(this, EventArgs.Empty);
         }
