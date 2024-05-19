@@ -37,6 +37,7 @@ namespace IoTAgentLib
         public bool IsConnected { get { return _opcClient != null; } }
 
         public event EventHandler ServerConnectedEvent;
+        public event EventHandler DevicesLoadBeginEvent;
         public event EventHandler DevicesLoadedEvent;
         #endregion
 
@@ -84,6 +85,8 @@ namespace IoTAgentLib
         /// </summary>
         public void LoadUpDeviceNodes()
         {
+            DevicesLoadBeginEvent?.Invoke(this, EventArgs.Empty);
+
             var node = _opcClient.BrowseNode(OpcObjectTypes.ObjectsFolder);
 
             foreach (var childNode in node.Children())

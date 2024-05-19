@@ -43,6 +43,8 @@ namespace gui.ViewModels
         public ShellViewModel()
         {
             Globals.IoTAgent.ServerConnectedEvent += OnAgentServerConnected;
+            Globals.IoTAgent.DevicesLoadBeginEvent += OnDevicesLoadBegin;
+            Globals.IoTAgent.DevicesLoadedEvent += OnDevicesLoaded;
         }
         #endregion
 
@@ -78,6 +80,16 @@ namespace gui.ViewModels
 
         #region Event handlers
         private void OnAgentServerConnected(object? sender, EventArgs e)
+        {
+            ServerStatusString = "Server: Connected";
+        }
+
+        private void OnDevicesLoadBegin(object? sender, EventArgs e)
+        {
+            ServerStatusString = "Server: Loading devices...";
+        }
+
+        private void OnDevicesLoaded(object? sender, EventArgs e)
         {
             ServerStatusString = "Server: Connected";
         }
