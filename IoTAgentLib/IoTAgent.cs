@@ -79,7 +79,7 @@ namespace IoTAgentLib
         }
 
         /// <summary>
-        /// Loads up devices found on OPC server.
+        /// Loads up devices found on OPC server and sets it's OPC subscriptions.
         /// Assumes nodes with devices have "Device" in name.
         /// </summary>
         public void LoadUpDeviceNodes()
