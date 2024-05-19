@@ -45,6 +45,8 @@ namespace gui.ViewModels
             Globals.IoTAgent.ServerConnectedEvent += OnAgentServerConnected;
             Globals.IoTAgent.DevicesLoadBeginEvent += OnDevicesLoadBegin;
             Globals.IoTAgent.DevicesLoadedEvent += OnDevicesLoaded;
+
+            ActivateDevicesList();
         }
         #endregion
 

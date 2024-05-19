@@ -12,7 +12,7 @@
         Title="ShellView" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="100"/>
+            <!--<ColumnDefinition Width="100"/>-->
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -32,15 +32,17 @@
             
         </StackPanel>
 
+        <!--
         <Border Grid.Column="0"
-                Grid.Row="1"
-                BorderThickness="0 0 1 0"
-                BorderBrush="Wheat">
+            Grid.Row="1"
+            BorderThickness="0 0 1 0"
+            BorderBrush="Wheat">
             <StackPanel Background="#2B2B2B">
                 <Button x:Name="DevicesListButton"
-                        Content="Devices"/>
+                    Content="Devices"/>
             </StackPanel>
         </Border>
+        -->
 
         <Border Grid.Column="1"
                 Grid.Row="1"

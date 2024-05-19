@@ -8,7 +8,26 @@ namespace IoTAgentLib.Utils
 {
     public static class Config
     {
-        public static string BLOB_CONNECTION_STRING = "DefaultEndpointsProtocol=https;AccountName=zajeciaiot;AccountKey=CU1oHBri/il5DB6XsngYdiyoUfDZBVVVjzP9AbfDNrz74CQVFIUQ7xSzzB5uhhSDCvzSmC/FAGiz+AStl4xfzQ==;EndpointSuffix=core.windows.net";
-        public static string IOT_HUB_CONNECTION_STRING { get; set; } = "HostName=maciek.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=3nBZVKGKMDN9EeZH3hKdHCxERRyIAMXBRAIoTGZkDuI=";
+        public static readonly string BLOB_CONNECTION_STRING;
+        public static readonly string IOT_HUB_CONNECTION_STRING;
+
+        static Config()
+        {
+            var lines = File.ReadLines("config.ini");
+            foreach (var line in lines)
+            {
+                string[] keyValue = line.Split(" = ");
+                switch (keyValue[0])
+                {
+                    case "BLOB_CONNECTION_STRING":
+                        BLOB_CONNECTION_STRING = keyValue[1];
+                        break;
+
+                    case "IOT_HUB_CONNECTION_STRING":
+                        IOT_HUB_CONNECTION_STRING = keyValue[1];
+                        break;
+                }
+            }
+        }
     }
 }
