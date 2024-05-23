@@ -54,6 +54,19 @@ namespace gui.ViewModels
             if (DevicesViewModels.Count == 0)
                 EmptyTextBlockVisibility = Visibility.Visible;
         }
+
+        private void AddNewDevice()
+        {
+            new WindowManager().ShowDialogAsync(new NewDeviceWindowViewModel());
+        }
+        #endregion
+
+
+        #region Button clicks
+        public void NewDeviceButton()
+        {
+            AddNewDevice();
+        }
         #endregion
 
 
