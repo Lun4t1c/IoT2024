@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace gui.ViewModels
 {
@@ -55,9 +56,12 @@ namespace gui.ViewModels
         private async void ConnectWithServer()
         {
             ServerStatusString = "Server: Connecting...";
-            string? res = await Globals.IoTAgent.ConnectWithServer(ServerConnectionString);
+            Exception? res = await Globals.IoTAgent.ConnectWithServer(ServerConnectionString);
             if (res != null)
-                ServerStatusString = "Server: " + res;
+            {
+                ServerStatusString = "Server: " + res.Message;
+                MessageBox.Show(res.StackTrace);
+            }
         }
 
         private async void ActivateDevicesList()

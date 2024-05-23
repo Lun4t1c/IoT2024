@@ -59,7 +59,7 @@ namespace IoTAgentLib
         /// </summary>
         /// <param name="address">OPC server's address.</param>
         /// <returns><c>null</c> if succeeded and error message as string if failed.</returns>
-        public async Task<string?> ConnectWithServer(string address)
+        public async Task<Exception?> ConnectWithServer(string address)
         {
             return await Task.Run(async () =>
             {
@@ -74,7 +74,7 @@ namespace IoTAgentLib
                 catch (Exception exc)
                 {
                     await Console.Out.WriteLineAsync(exc.Message);
-                    return exc.Message;
+                    return exc;
                 }
             });
         }
@@ -117,30 +117,16 @@ namespace IoTAgentLib
         /// and creates new Azure device client
         /// for every found match with production device.
         /// </summary>
-        public async void AssociateIoTHubDevices()
+        public void AssociateIoTHubDevices()
         {
-            var registryManager = RegistryManager.CreateFromConnectionString(Utils.Config.IOT_HUB_CONNECTION_STRING);
-            var devices = await registryManager.GetDevicesAsync(int.MaxValue);
-
-            foreach (var azureDevice in devices)
+            foreach (VirtualDevice virtualDevice in Devices)
             {
-                var deviceDetails = await registryManager.GetDeviceAsync(azureDevice.Id);
-                string deviceConnectionString = $"HostName=maciek.azure-devices.net;DeviceId={azureDevice.Id};SharedAccessKey={deviceDetails.Authentication.SymmetricKey.PrimaryKey}";
-
-                foreach (VirtualDevice virtualDevice in Devices)
-                {
-                    if (azureDevice.Id == virtualDevice.DisplayName.Replace(" ", ""))
-                    {
-                        virtualDevice.DeviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString);
-                        virtualDevice.NotifyOfAzureClientStateChange();
-
-                        _ = virtualDevice.DeviceClient.SetMethodHandlerAsync("EmergencyStop", virtualDevice.EmergencyStopMethodHandler, virtualDevice.DeviceClient);
-                        _ = virtualDevice.DeviceClient.SetMethodHandlerAsync("ResetErrorStatus", virtualDevice.ResetErrorStatusMethodHandler, virtualDevice.DeviceClient);
-                    }
-                }
+                virtualDevice.DeviceClient = DeviceClient.CreateFromConnectionString(Config.DEVICES_CONNECTION_STRINGS[virtualDevice.DisplayName]);
+                virtualDevice.NotifyOfAzureClientStateChange();
+                
+                _ = virtualDevice.DeviceClient.SetMethodHandlerAsync("EmergencyStop", virtualDevice.EmergencyStopMethodHandler, virtualDevice.DeviceClient);
+                _ = virtualDevice.DeviceClient.SetMethodHandlerAsync("ResetErrorStatus", virtualDevice.ResetErrorStatusMethodHandler, virtualDevice.DeviceClient);
             }
-
-            await registryManager.CloseAsync();
         }
 
         /// <summary>

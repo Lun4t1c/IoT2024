@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="copy $(ProjectDir)config.ini $(ProjectDir)$(OutDir)" />
+    <Exec Command="copy $(ProjectDir)config.json $(ProjectDir)$(OutDir)" />
   </Target>
 
 </Project>
