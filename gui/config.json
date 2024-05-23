@@ -1,0 +1,6 @@
+{
+	"BLOB_CONNECTION_STRING": "<your blob connection string>",
+	"DEVICES_CONNECTION_STRINGS": {
+		list of devices in the form "<NODE DISPLAY NAME> : <AZURE_DEVICE_CONNECTION_STRING>"
+	}
+}
