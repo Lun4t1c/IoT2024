@@ -39,6 +39,12 @@ namespace IoTAgentLib
         public event EventHandler ServerConnectedEvent;
         public event EventHandler DevicesLoadBeginEvent;
         public event EventHandler DevicesLoadedEvent;
+        public event NewDeviceEventHandler NewDeviceEvent;
+
+
+        #region Deleagtes
+        public delegate void NewDeviceEventHandler(object sender, VirtualDevice vd);
+        #endregion
         #endregion
 
 
@@ -92,30 +98,68 @@ namespace IoTAgentLib
             foreach (var childNode in node.Children())
             {
                 if (childNode.DisplayName.Value.Contains("Device"))
-                {
-                    VirtualDevice newDevice = new VirtualDevice(childNode.NodeId);
-                    newDevice.DisplayName = childNode.DisplayName;
-
-                    newDevice.ProductionStatusSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/ProductionStatus", newDevice.HandleProductionStatusChanged);
-                    newDevice.WorkorderIdSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/WorkorderId", newDevice.HandleWorkorderIdChanged);
-                    newDevice.ProductionRateSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/ProductionRate", newDevice.HandleProductionRateChanged);
-                    newDevice.GoodCountSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/GoodCount", newDevice.HandleGoodCountChanged);
-                    newDevice.BadCountSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/BadCount", newDevice.HandleBadCountChanged);
-                    newDevice.TemperatureSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/Temperature", newDevice.HandleTemperatureChanged);
-                    newDevice.DeviceErrorsSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/DeviceError", newDevice.HandleDeviceErrorsChanged);
-
-                    Devices.Add(newDevice);
-                }
+                    if (Config.DEVICES_CONNECTION_STRINGS.ContainsKey(childNode.DisplayName.Value))
+                        Devices.Add(CreateDeviceFromNode(childNode));
             }
 
             DevicesLoadedEvent?.Invoke(this, EventArgs.Empty);
             AssociateIoTHubDevices();
         }
 
+        public Exception? AddNewDevice(string nodeName, string azureConnectionString)
+        {
+            try
+            {
+                var node = _opcClient.BrowseNode(OpcObjectTypes.ObjectsFolder);
+
+                foreach (var childNode in node.Children())
+                {
+                    if (childNode.DisplayName.Value.Contains(nodeName))
+                    {
+                        VirtualDevice newDevice = CreateDeviceFromNode(childNode);
+
+                        Devices.Add(newDevice);
+                        NewDeviceEvent?.Invoke(this, newDevice);
+
+                        newDevice.DeviceClient = DeviceClient.CreateFromConnectionString(azureConnectionString);
+                        newDevice.NotifyOfAzureClientStateChange();
+
+                        _ = newDevice.DeviceClient.SetMethodHandlerAsync("EmergencyStop", newDevice.EmergencyStopMethodHandler, newDevice.DeviceClient);
+                        _ = newDevice.DeviceClient.SetMethodHandlerAsync("ResetErrorStatus", newDevice.ResetErrorStatusMethodHandler, newDevice.DeviceClient);
+                    }
+                }
+
+                Exception? res = Config.AddNewDeviceEntry(nodeName, azureConnectionString);
+                if (res != null) return res;
+
+                return null;
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine(exc.Message);
+                return exc;
+            }
+        }
+
+        private VirtualDevice CreateDeviceFromNode(OpcNodeInfo nodeInfo)
+        {
+            VirtualDevice newDevice = new VirtualDevice(nodeInfo.NodeId);
+            newDevice.DisplayName = nodeInfo.DisplayName;
+
+            newDevice.ProductionStatusSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/ProductionStatus", newDevice.HandleProductionStatusChanged);
+            newDevice.WorkorderIdSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/WorkorderId", newDevice.HandleWorkorderIdChanged);
+            newDevice.ProductionRateSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/ProductionRate", newDevice.HandleProductionRateChanged);
+            newDevice.GoodCountSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/GoodCount", newDevice.HandleGoodCountChanged);
+            newDevice.BadCountSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/BadCount", newDevice.HandleBadCountChanged);
+            newDevice.TemperatureSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/Temperature", newDevice.HandleTemperatureChanged);
+            newDevice.DeviceErrorsSubscription = _opcClient.SubscribeDataChange(newDevice.NodeId + "/DeviceError", newDevice.HandleDeviceErrorsChanged);
+
+            return newDevice;
+        }
+
         /// <summary>
-        /// Checks Azure IoT hub for list of devices
-        /// and creates new Azure device client
-        /// for every found match with production device.
+        /// Checks config file for devices' connection strings
+        /// and creates new Azure devices client for them.
         /// </summary>
         public void AssociateIoTHubDevices()
         {

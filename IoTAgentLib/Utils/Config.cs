@@ -28,5 +28,23 @@ namespace IoTAgentLib.Utils
             BLOB_CONNECTION_STRING = config.BLOB_CONNECTION_STRING;
             DEVICES_CONNECTION_STRINGS = config.DEVICES_CONNECTION_STRINGS;
         }
+
+        public static Exception? AddNewDeviceEntry(string deviceName, string azureConnectionString)
+        {
+            try
+            {
+                string jsonText = File.ReadAllText(CONFIG_FILE_PATH);
+                ConfigHelperClass config = JsonConvert.DeserializeObject<ConfigHelperClass>(jsonText);
+
+                config.DEVICES_CONNECTION_STRINGS.Add(deviceName, azureConnectionString);
+                File.WriteAllText(CONFIG_FILE_PATH, JsonConvert.SerializeObject(config, Formatting.Indented));
+
+                return null;
+            }
+            catch (Exception exc)
+            {
+                return exc;
+            }
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
 using gui.Utils;
+using IoTAgentLib.Utils;
+using Microsoft.Azure.Devices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,13 +23,11 @@ namespace gui.ViewModels
             set { _emptyTextBlockVisibility = value; NotifyOfPropertyChange(() => EmptyTextBlockVisibility); }
         }
 
-
         public BindableCollection<DeviceViewModel> DevicesViewModels
         {
             get { return _devicesViewModels; }
             set { _devicesViewModels = value; NotifyOfPropertyChange(() => DevicesViewModels); }
         }
-
         #endregion
 
 
@@ -41,6 +41,13 @@ namespace gui.ViewModels
                 EmptyTextBlockVisibility = Visibility.Visible;
                 Globals.IoTAgent.DevicesLoadedEvent += OnAgentDevicesLoaded;
             }
+
+            Globals.IoTAgent.NewDeviceEvent += IoTAgent_NewDeviceEvent;
+        }
+
+        private void IoTAgent_NewDeviceEvent(object sender, VirtualDevice vd)
+        {
+            DevicesViewModels.Add(new DeviceViewModel(vd));
         }
         #endregion
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace gui.ViewModels
 {
@@ -37,14 +38,18 @@ namespace gui.ViewModels
 
 
         #region Methods
-
+        private void Submit()
+        {
+            Exception? res = Globals.IoTAgent.AddNewDevice(NodeDisplayName, AzureConnectionString);
+            if (res != null) MessageBox.Show(res.Message);
+        }
         #endregion
 
 
         #region Button clicks
         public void SubmitButton()
         {
-            Globals.IoTAgent.AddNewDevice(NodeDisplayName, AzureConnectionString);
+            Submit();
         }
         #endregion
     }
