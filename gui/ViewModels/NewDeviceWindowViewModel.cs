@@ -56,7 +56,6 @@ namespace gui.ViewModels
         private async void Submit()
         {
             IsDeviceSubmitting = true;
-            await Task.Delay(2000);
             Exception? res = await Globals.IoTAgent.AddNewDevice(NodeDisplayName, AzureConnectionString);
             if (res != null)
             {
