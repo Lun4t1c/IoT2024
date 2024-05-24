@@ -5,8 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:gui.Views"
         mc:Ignorable="d"
-        Title="NewDeviceWindowView" Height="450" Width="800">
+        Background="#333333"
+        FontFamily="Segoe UI Light"
+        Title="New device" Height="450" Width="800"
+        SizeToContent="WidthAndHeight"
+        FontSize="24"
+        Padding="150">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -16,13 +24,15 @@
         </Grid.RowDefinitions>
         
         <Label Grid.Row="0"
-               Content="Node display name:"/>
+               Content="Node display name:"
+               Foreground="Wheat"/>
         <TextBox Grid.Row="1"
                  x:Name="NodeDisplayName"
                  Margin="5"/>
         
         <Label Grid.Row="2"
-               Content="Azure connection string:"/>
+               Content="Azure connection string:"
+               Foreground="Wheat"/>
         <TextBox Grid.Row="3"
                  x:Name="AzureConnectionString"
                  Margin="5"/>
