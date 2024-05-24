@@ -106,7 +106,7 @@ namespace IoTAgentLib
             AssociateIoTHubDevices();
         }
 
-        public Exception? AddNewDevice(string nodeName, string azureConnectionString)
+        public async Task<Exception?> AddNewDevice(string nodeName, string azureConnectionString)
         {
             try
             {
@@ -126,13 +126,14 @@ namespace IoTAgentLib
 
                         _ = newDevice.DeviceClient.SetMethodHandlerAsync("EmergencyStop", newDevice.EmergencyStopMethodHandler, newDevice.DeviceClient);
                         _ = newDevice.DeviceClient.SetMethodHandlerAsync("ResetErrorStatus", newDevice.ResetErrorStatusMethodHandler, newDevice.DeviceClient);
+
+                        Exception? res = Config.AddNewDeviceEntry(nodeName, azureConnectionString);
+                        if (res != null) return res;
+
+                        return null;
                     }
                 }
-
-                Exception? res = Config.AddNewDeviceEntry(nodeName, azureConnectionString);
-                if (res != null) return res;
-
-                return null;
+                return new Exception($"Could not find node with display name '{nodeName}'");
             }
             catch (Exception exc)
             {

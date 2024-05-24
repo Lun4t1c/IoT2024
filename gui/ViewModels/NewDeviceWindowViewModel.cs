@@ -14,6 +14,7 @@ namespace gui.ViewModels
         #region Properties
         private string _nodeDisplayName = "";
         private string _azureConnectionString = "";
+        private bool _isDeviceSubmitting = false;
 
         public string NodeDisplayName
         {
@@ -26,6 +27,20 @@ namespace gui.ViewModels
             get { return _azureConnectionString; }
             set { _azureConnectionString = value; NotifyOfPropertyChange(() => AzureConnectionString); }
         }
+
+        public bool IsDeviceSubmitting
+        {
+            get { return _isDeviceSubmitting; }
+            set { 
+                _isDeviceSubmitting = value;
+                NotifyOfPropertyChange(() => IsDeviceSubmitting);
+                NotifyOfPropertyChange(() => SubmittingTextBlockVisibility);
+                NotifyOfPropertyChange(() => SubmitButtonVisibility);
+            }
+        }
+
+        public Visibility SubmittingTextBlockVisibility { get { return IsDeviceSubmitting ? Visibility.Visible : Visibility.Hidden; } }
+        public Visibility SubmitButtonVisibility { get { return IsDeviceSubmitting ? Visibility.Hidden : Visibility.Visible; } }
         #endregion
 
 
@@ -38,10 +53,18 @@ namespace gui.ViewModels
 
 
         #region Methods
-        private void Submit()
+        private async void Submit()
         {
-            Exception? res = Globals.IoTAgent.AddNewDevice(NodeDisplayName, AzureConnectionString);
-            if (res != null) MessageBox.Show(res.Message);
+            IsDeviceSubmitting = true;
+            await Task.Delay(2000);
+            Exception? res = await Globals.IoTAgent.AddNewDevice(NodeDisplayName, AzureConnectionString);
+            if (res != null)
+            {
+                MessageBox.Show(res.Message);
+                IsDeviceSubmitting = false;
+            }
+            else
+                await this.TryCloseAsync();
         }
         #endregion
 

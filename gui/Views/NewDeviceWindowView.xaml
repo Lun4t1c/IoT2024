@@ -26,9 +26,14 @@
         <TextBox Grid.Row="3"
                  x:Name="AzureConnectionString"
                  Margin="5"/>
-        
+
+        <TextBlock Grid.Row="4"
+                   Text="Submitting..."
+                   HorizontalAlignment="Center"
+                   Visibility="{Binding SubmittingTextBlockVisibility}"/>
         <Button Grid.Row="4"
                 Content="Submit"
-                x:Name="SubmitButton"/>
+                x:Name="SubmitButton"
+                Visibility="{Binding SubmitButtonVisibility}"/>
     </Grid>
 </Window>
