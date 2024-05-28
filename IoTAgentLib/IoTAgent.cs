@@ -168,9 +168,10 @@ namespace IoTAgentLib
             {
                 virtualDevice.DeviceClient = DeviceClient.CreateFromConnectionString(Config.DEVICES_CONNECTION_STRINGS[virtualDevice.DisplayName]);
                 virtualDevice.NotifyOfAzureClientStateChange();
-                
+
                 _ = virtualDevice.DeviceClient.SetMethodHandlerAsync("EmergencyStop", virtualDevice.EmergencyStopMethodHandler, virtualDevice.DeviceClient);
                 _ = virtualDevice.DeviceClient.SetMethodHandlerAsync("ResetErrorStatus", virtualDevice.ResetErrorStatusMethodHandler, virtualDevice.DeviceClient);
+                _ = virtualDevice.DeviceClient.SetDesiredPropertyUpdateCallbackAsync(virtualDevice.TwinPropertyChangedHandler, virtualDevice.DeviceClient);
             }
         }
 

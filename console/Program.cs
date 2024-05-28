@@ -6,11 +6,6 @@ Console.WriteLine("Hello, IoT!");
 
 IoTAgent agent = IoTAgent.GetInstance();
 
-foreach (string name in await Helpers.GetContainerNamesAsync())
-{
-    Console.WriteLine(name);
-}
-
 await agent.ConnectWithServer("opc.tcp://localhost:4840/");
 
 //agent.ConnectWithServer("sdsadsad");
