@@ -243,10 +243,7 @@ namespace IoTAgentLib.Utils
 
         public async Task TwinPropertyChangedHandler(TwinCollection desiredProperties, object userContext)
         {
-            Console.WriteLine("Desired property change received:");
-            Console.WriteLine(desiredProperties["ProductionRate"]);
-
-            // You can process the desired property changes here and update the device accordingly
+            IoTAgent.GetInstance().SetProductionRateInDevice(this, Convert.ToInt16(desiredProperties["ProductionRate"]));
         }
         #endregion
     }
