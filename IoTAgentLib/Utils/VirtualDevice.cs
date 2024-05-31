@@ -1,5 +1,8 @@
-﻿using Microsoft.Azure.Devices.Client;
+﻿using Azure.Messaging.ServiceBus;
+using Microsoft.Azure.Amqp.Framing;
+using Microsoft.Azure.Devices.Client;
 using Microsoft.Azure.Devices.Shared;
+using Newtonsoft.Json;
 using Opc.Ua;
 using Opc.UaFx;
 using Opc.UaFx.Client;
@@ -23,6 +26,10 @@ namespace IoTAgentLib.Utils
         /// with device from Azure's IoT hub.
         /// </summary>
         public DeviceClient DeviceClient { get; set; } = null;
+
+        public ServiceBusClient ServiceBusClient { get; set; } = null;
+
+        public ServiceBusSender ServiceBusSender { get; set; } = null;
 
         /// <summary>
         /// Devices name, which is to be displayed as string. Also serves as Azure IoT hub's device ID.
@@ -105,6 +112,8 @@ namespace IoTAgentLib.Utils
         public VirtualDevice(OpcNodeId nodeId)
         {
             NodeId = nodeId;
+            ServiceBusClient = new ServiceBusClient(Config.SERVICE_BUS_CONNECTION_STRING);
+            ServiceBusSender = ServiceBusClient.CreateSender(Config.SERVICE_BUS_QUEUE_NAME);
         }
         #endregion
 
@@ -118,11 +127,18 @@ namespace IoTAgentLib.Utils
         /// <returns></returns>
         public async Task DeviceToCloudMessageProperty(string propertyName, object propertyValue)
         {
-            Message eventMessage = new Message();
+            var data = new
+            {
+                PropertyName = propertyName,
+                PropertyValue = propertyValue
+            };
+            var messageBody = JsonConvert.SerializeObject(data);
+            Message eventMessage = new Message(Encoding.UTF8.GetBytes(messageBody));
             eventMessage.ContentType = MediaTypeNames.Application.Json;
             eventMessage.ContentEncoding = "utf-8";
-            eventMessage.Properties.Add("DeviceId", DisplayName.Replace(" ", ""));
-            eventMessage.Properties.Add(propertyName, propertyValue.ToString());
+
+            //eventMessage.Properties.Add("DeviceId", DisplayName.Replace(" ", ""));
+            //eventMessage.Properties.Add(propertyName, propertyValue.ToString());
 
             if (DeviceClient != null)
                 await DeviceClient.SendEventAsync(eventMessage);

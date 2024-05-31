@@ -42,7 +42,7 @@ namespace IoTAgentLib
         public event NewDeviceEventHandler NewDeviceEvent;
 
 
-        #region Deleagtes
+        #region Delegates
         public delegate void NewDeviceEventHandler(object sender, VirtualDevice vd);
         #endregion
         #endregion

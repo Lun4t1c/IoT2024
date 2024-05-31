@@ -4,5 +4,7 @@
 		"Device 1": "HostName=maciek.azure-devices.net;DeviceId=Device1;SharedAccessKey=KebSsZnqtxfKZkbl7RTAMc5xtQKw2QxrBn4UrfPWvyk=",
 		"Device 2": "HostName=maciek.azure-devices.net;DeviceId=Device2;SharedAccessKey=HAYDqA9PQ+E7FhOAnnQMufncuXduDq6YbN99mjbO8dY=",
 		"Device 3": "HostName=maciek.azure-devices.net;DeviceId=Device3;SharedAccessKey=Oku5rg3FYmDKKJEyqWtPdnutmfM17sFyz8Y1DDxS5lk="
-	}
+	},
+	"SERVICE_BUS_CONNECTION_STRING": "Endpoint=sb://sb-ul-2024.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=PQpD2tzt/r1O4hJzAIS7GjHpzLfqHR2hn+ASbLSSqBM=",
+	"SERVICE_BUS_QUEUE_NAME": ""
 }
