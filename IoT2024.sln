@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoTAgentLib", "IoTAgentLib\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "gui", "gui\gui.csproj", "{DBAA8C70-C24D-465A-B3B8-6EEF033D9C5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "console", "console\console.csproj", "{D68BB86D-3037-4313-8E1F-EEDCFA697051}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "console", "console\console.csproj", "{D68BB86D-3037-4313-8E1F-EEDCFA697051}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{005FAA0B-B0BF-422F-8AC2-792B8FAADC12}"
+	ProjectSection(SolutionItems) = preProject
+		queries.sql = queries.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

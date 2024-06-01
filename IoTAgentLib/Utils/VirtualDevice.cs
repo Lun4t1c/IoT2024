@@ -27,10 +27,6 @@ namespace IoTAgentLib.Utils
         /// </summary>
         public DeviceClient DeviceClient { get; set; } = null;
 
-        public ServiceBusClient ServiceBusClient { get; set; } = null;
-
-        public ServiceBusSender ServiceBusSender { get; set; } = null;
-
         public PeriodicTimer TelemetryTimer { get; set; } = null;
 
         /// <summary>
@@ -114,8 +110,6 @@ namespace IoTAgentLib.Utils
         public VirtualDevice(OpcNodeId nodeId)
         {
             NodeId = nodeId;
-            ServiceBusClient = new ServiceBusClient(Config.SERVICE_BUS_CONNECTION_STRING);
-            ServiceBusSender = ServiceBusClient.CreateSender(Config.SERVICE_BUS_QUEUE_NAME);
             StartTelemetryTimer();
         }
         #endregion
