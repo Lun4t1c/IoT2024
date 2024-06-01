@@ -1,10 +1,11 @@
 {
 	"BLOB_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=zajeciaiot;AccountKey=CU1oHBri/il5DB6XsngYdiyoUfDZBVVVjzP9AbfDNrz74CQVFIUQ7xSzzB5uhhSDCvzSmC/FAGiz+AStl4xfzQ==;EndpointSuffix=core.windows.net",
+	"TELEMETRY_SEND_INTERVAL_MS": 1000,
 	"DEVICES_CONNECTION_STRINGS": {
 		"Device 1": "HostName=maciek.azure-devices.net;DeviceId=Device1;SharedAccessKey=KebSsZnqtxfKZkbl7RTAMc5xtQKw2QxrBn4UrfPWvyk=",
 		"Device 2": "HostName=maciek.azure-devices.net;DeviceId=Device2;SharedAccessKey=HAYDqA9PQ+E7FhOAnnQMufncuXduDq6YbN99mjbO8dY=",
 		"Device 3": "HostName=maciek.azure-devices.net;DeviceId=Device3;SharedAccessKey=Oku5rg3FYmDKKJEyqWtPdnutmfM17sFyz8Y1DDxS5lk="
 	},
 	"SERVICE_BUS_CONNECTION_STRING": "Endpoint=sb://sb-ul-2024.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=PQpD2tzt/r1O4hJzAIS7GjHpzLfqHR2hn+ASbLSSqBM=",
-	"SERVICE_BUS_QUEUE_NAME": ""
+	"SERVICE_BUS_QUEUE_NAME": "myqueue"
 }

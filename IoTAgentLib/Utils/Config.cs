@@ -12,6 +12,7 @@ namespace IoTAgentLib.Utils
         public static readonly string CONFIG_FILE_PATH = @"config.json";
 
         public static readonly string BLOB_CONNECTION_STRING;
+        public static readonly int TELEMETRY_SEND_INTERVAL_MS;
         public static readonly Dictionary<string, string> DEVICES_CONNECTION_STRINGS;
         public static readonly string SERVICE_BUS_CONNECTION_STRING;
         public static readonly string SERVICE_BUS_QUEUE_NAME;
@@ -19,6 +20,7 @@ namespace IoTAgentLib.Utils
         public class ConfigHelperClass
         {
             public string BLOB_CONNECTION_STRING { get; set; }
+            public int TELEMETRY_SEND_INTERVAL_MS { get; set; }
             public Dictionary<string, string> DEVICES_CONNECTION_STRINGS { get; set; }
             public string SERVICE_BUS_CONNECTION_STRING { get; set; }
             public string SERVICE_BUS_QUEUE_NAME { get; set; }
@@ -31,6 +33,7 @@ namespace IoTAgentLib.Utils
             ConfigHelperClass config = JsonConvert.DeserializeObject<ConfigHelperClass>(jsonText);
 
             BLOB_CONNECTION_STRING = config.BLOB_CONNECTION_STRING;
+            TELEMETRY_SEND_INTERVAL_MS = config.TELEMETRY_SEND_INTERVAL_MS;
             DEVICES_CONNECTION_STRINGS = config.DEVICES_CONNECTION_STRINGS;
             SERVICE_BUS_CONNECTION_STRING = config.SERVICE_BUS_CONNECTION_STRING;
             SERVICE_BUS_QUEUE_NAME = config.SERVICE_BUS_QUEUE_NAME;

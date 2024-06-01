@@ -31,6 +31,8 @@ namespace IoTAgentLib.Utils
 
         public ServiceBusSender ServiceBusSender { get; set; } = null;
 
+        public PeriodicTimer TelemetryTimer { get; set; } = null;
+
         /// <summary>
         /// Devices name, which is to be displayed as string. Also serves as Azure IoT hub's device ID.
         /// </summary>
@@ -114,11 +116,22 @@ namespace IoTAgentLib.Utils
             NodeId = nodeId;
             ServiceBusClient = new ServiceBusClient(Config.SERVICE_BUS_CONNECTION_STRING);
             ServiceBusSender = ServiceBusClient.CreateSender(Config.SERVICE_BUS_QUEUE_NAME);
+            StartTelemetryTimer();
         }
         #endregion
 
 
         #region Methods
+        public async void StartTelemetryTimer()
+        {
+            TelemetryTimer = new PeriodicTimer(TimeSpan.FromMilliseconds(Config.TELEMETRY_SEND_INTERVAL_MS));
+
+            while (await TelemetryTimer.WaitForNextTickAsync())
+            {
+                await SendTelemetryPacket();
+            }
+        }
+
         /// <summary>
         /// Send D2C message with device's specified property and it's value.
         /// </summary>
@@ -143,6 +156,33 @@ namespace IoTAgentLib.Utils
             if (DeviceClient != null)
                 await DeviceClient.SendEventAsync(eventMessage);
         }
+
+        public async Task SendTelemetryPacket()
+        {
+            if (DeviceClient != null)
+            {
+                var data = new
+                {
+                    DeviceName = DisplayName,
+                    WorkorderId = WorkorderId,
+                    ProductionStatus = ProductionStatus,
+                    Temperature = Temperature,
+                    ProductionRate = ProductionRate,
+                    GoodCount = GoodCount,
+                    BadCount = BadCount,
+                };
+
+                Message message = new Message(
+                    Encoding.UTF8.GetBytes(
+                        JsonConvert.SerializeObject(data)
+                        )
+                    );
+
+                message.ContentType = MediaTypeNames.Application.Json;
+                message.ContentEncoding = "utf-8";
+                await DeviceClient.SendEventAsync(message);
+            }
+        } 
 
         /// <summary>
         /// Update single device twin's property in cloud.
@@ -185,7 +225,7 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             ProductionStatus = Convert.ToBoolean(e.Item.Value.Value);
-            _ = DeviceToCloudMessageProperty(nameof(ProductionStatus), ProductionStatus);
+            //_ = DeviceToCloudMessageProperty(nameof(ProductionStatus), ProductionStatus);
 
             ProductionStateChangedEvent?.Invoke(this, EventArgs.Empty);
         }
@@ -194,7 +234,7 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             WorkorderId = Guid.Parse(e.Item.Value.Value.ToString());
-            _ = DeviceToCloudMessageProperty(nameof(WorkorderId), WorkorderId);
+            //_ = DeviceToCloudMessageProperty(nameof(WorkorderId), WorkorderId);
 
             WorkorderIdChangedEvent?.Invoke(this, EventArgs.Empty);
         }
@@ -203,7 +243,7 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             ProductionRate = Convert.ToInt16(e.Item.Value.Value);
-            _ = UpdateTwinPropertyAsync(nameof(ProductionRate), ProductionRate);
+            //_ = UpdateTwinPropertyAsync(nameof(ProductionRate), ProductionRate);
 
             ProductionRateChangedEvent?.Invoke(this, EventArgs.Empty);
         }
@@ -212,7 +252,7 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             GoodCount = Convert.ToUInt32(e.Item.Value.Value);
-            _ = DeviceToCloudMessageProperty(nameof(GoodCount), GoodCount);
+            //_ = DeviceToCloudMessageProperty(nameof(GoodCount), GoodCount);
 
             GoodCountChangedEvent?.Invoke(this, EventArgs.Empty);
         }
@@ -221,7 +261,7 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             BadCount = Convert.ToUInt32(e.Item.Value.Value);
-            _ = DeviceToCloudMessageProperty(nameof(BadCount), BadCount);
+            //_ = DeviceToCloudMessageProperty(nameof(BadCount), BadCount);
 
             BadCountChangedEvent?.Invoke(this, EventArgs.Empty);
         }
@@ -230,7 +270,7 @@ namespace IoTAgentLib.Utils
         {
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             Temperature = (double)e.Item.Value.Value;
-            _ = DeviceToCloudMessageProperty(nameof(Temperature), Temperature);
+            //_ = DeviceToCloudMessageProperty(nameof(Temperature), Temperature);
 
             TemperatureChangedEvent?.Invoke(this, EventArgs.Empty);
         }
@@ -240,7 +280,7 @@ namespace IoTAgentLib.Utils
             OpcMonitoredItem item = (OpcMonitoredItem)sender;
             DeviceError = Convert.ToByte(e.Item.Value.Value);
             _ = UpdateTwinPropertyAsync(nameof(DeviceError), DeviceError);
-            _ = DeviceToCloudMessageProperty(nameof(DeviceError), DeviceError);
+            //_ = DeviceToCloudMessageProperty(nameof(DeviceError), DeviceError);
 
             DeviceErrorsChangedEvent?.Invoke(this, EventArgs.Empty);
         }
